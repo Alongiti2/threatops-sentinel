@@ -1,3 +1,84 @@
+# ThreatOps Sentinel
+
+> End-to-end Security Operations & Threat Management platform — built to mirror real-world Staff SecOps engineering: SIEM ingestion, MITRE ATT&CK detection, SOAR automation, adversary emulation, and forensic response on AWS.
+
+![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)
+![AWS](https://img.shields.io/badge/AWS-CloudTrail%20%7C%20GuardDuty%20%7C%20Lambda-orange?style=flat-square&logo=amazonaws)
+![Terraform](https://img.shields.io/badge/IaC-Terraform-purple?style=flat-square&logo=terraform)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK%20Mapped-red?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=flat-square)
+
+---
+
+## What this project does
+
+ThreatOps Sentinel is a production-grade SecOps platform that demonstrates the full lifecycle of threat detection and response — from raw log ingestion to executive incident reporting. It was designed to reflect the exact responsibilities of a Staff Security Engineer operating in a cloud-native environment.
+
+| Phase | Domain | Key Capability |
+|-------|--------|----------------|
+| 1 | SIEM Pipeline | AWS log ingestion, normalization, OpenSearch dashboards |
+| 2 | Detection Engine | Sigma/YARA rules, MITRE ATT&CK auto-tagging, vulnerability correlation |
+| 3 | SOAR Automation | Incident response playbooks, SLA tracking, PagerDuty/Slack routing |
+| 4 | Threat Intelligence | MISP/VirusTotal enrichment, APT emulation planning, Atomic Red Team |
+| 5 | Forensics & Compliance | Attack timeline reconstruction, chain-of-custody vault, compliance matrix |
+
+---
+
+## Architecture
+┌─────────────────────────────────────────────────────────────────┐
+
+│                        AWS Cloud Environment                     │
+
+│                                                                  │
+
+│  CloudTrail ──┐                                                  │
+
+│  GuardDuty ───┼──► Kinesis ──► Lambda ──► S3 ──► Athena         │
+
+│  VPC Flow ────┘    (ingest)   (normalize)        (forensic replay)│
+
+│  auditd ─────────────────────────────────────────────────────── │
+
+│                                        │                         │
+
+│                                        ▼                         │
+
+│                                   OpenSearch ──► Kibana Dashboard│
+
+│                                        │                         │
+
+│                              ┌─────────┴──────────┐             │
+
+│                              ▼                     ▼             │
+
+│                       Detection Engine        SOAR Engine        │
+
+│                    (Sigma + YARA rules)   (Response Playbooks)   │
+
+│                    (MITRE ATT&CK mapper)  (SLA Tracker)          │
+
+│                              │                     │             │
+
+│                              ▼                     ▼             │
+
+│                       Threat Intel           PagerDuty / Slack   │
+
+│                    (MISP / VT / CISA KEV)                        │
+
+│                              │                                   │
+
+│                              ▼                                   │
+
+│                    Forensics & Compliance                        │
+
+│                 (Timeline Reconstructor)                         │
+
+│                 (Chain-of-Custody Vault)                         │
+
+│                 (NIST / SOC 2 / ISO 27001 Matrix)               │
+
+└─────────────────────────────────────────────────────────────────┘
 ---
 
 ## MITRE ATT&CK Coverage
