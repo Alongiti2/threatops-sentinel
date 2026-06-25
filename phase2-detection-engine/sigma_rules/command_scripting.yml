@@ -1,0 +1,63 @@
+title: Suspicious Command and Scripting Interpreter Execution
+id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+status: production
+description: Detects suspicious shell or scripting interpreter execution patterns
+  associated with adversary command execution techniques.
+references:
+  - https://attack.mitre.org/techniques/T1059/
+author: Delphin Alongiti - ThreatOps Sentinel
+date: 2026-06-24
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.t1059.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_shell_download:
+    Image|endswith:
+      - '/bash'
+      - '/sh'
+      - '/zsh'
+    CommandLine|contains:
+      - 'wget '
+      - 'curl '
+      - 'nc '
+      - 'ncat '
+      - '/dev/tcp'
+      - 'base64 -d'
+      - 'python -c'
+      - 'python3 -c'
+      - 'perl -e'
+  selection_encoded:
+    CommandLine|base64offset|contains:
+      - '/bin/sh'
+      - '/bin/bash'
+      - 'chmod +x'
+  selection_suspicious_args:
+    Image|endswith:
+      - '/bash'
+      - '/sh'
+    CommandLine|contains:
+      - ' -i '
+      - '>&'
+      - '2>&1'
+      - '0<&'
+  filter_known_good:
+    ParentImage|startswith:
+      - '/usr/bin/apt'
+      - '/usr/bin/yum'
+      - '/usr/lib/systemd'
+  condition: (1 of selection_*) and not filter_known_good
+falsepositives:
+  - Legitimate administrative scripts
+  - Package manager operations
+  - CI/CD pipeline scripts
+level: high
+fields:
+  - Image
+  - CommandLine
+  - ParentImage
+  - User
+  - WorkingDirectory
